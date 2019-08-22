@@ -1,4 +1,5 @@
 ﻿using Emgu.CV;
+using Emgu.CV.CvEnum;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -16,20 +17,23 @@ namespace CaptureVideo
 		private string videoPath = string.Empty;
 		private string saveDir = string.Empty;
 
+		private delegate void SetText(string progress);
+		private SetText st;
+
+		private void SetTextProgress(string progress)
+		{
+			this.message.Text = progress;
+		}
+
 		public Form1()
 		{
 			InitializeComponent();
-		}
-
-		private void Form1_Load(object sender, EventArgs e)
-		{
-
+			st = new SetText(SetTextProgress);
 		}
 
 		private void SelectVideoPath(object sender, EventArgs e)
 		{
 			OpenFileDialog openFileDialog1 = new OpenFileDialog();     //显示选择文件对话框
-			openFileDialog1.InitialDirectory = "c:\\";
 			openFileDialog1.Filter = "All files (*.*)|*.*|video files|*.mp4;*.wmv";
 			openFileDialog1.FilterIndex = 2;
 			openFileDialog1.RestoreDirectory = true;
@@ -44,7 +48,6 @@ namespace CaptureVideo
 		private void SelectSaveDirBtn_Click(object sender, EventArgs e)
 		{
 			FolderBrowserDialog folderBrowserDialog1 = new FolderBrowserDialog();
-			folderBrowserDialog1.SelectedPath = "C:\\";
 			if(folderBrowserDialog1.ShowDialog() == DialogResult.OK)
 			{
 				this.saveDir = folderBrowserDialog1.SelectedPath;
@@ -54,7 +57,6 @@ namespace CaptureVideo
 
 		private async void CaptureVideoFrame_Click(object sender, EventArgs e)
 		{
-
 			try
 			{
 				if (videoPath == string.Empty || saveDir == string.Empty)
@@ -62,8 +64,7 @@ namespace CaptureVideo
 					return;
 				}
 				Task task = Task.Run(() => CaptureVideo(videoPath, saveDir));
-				this.message.Text = "处理中...";
-				
+
 				await task;
 				this.message.Text = "完成";
 			}catch
@@ -72,7 +73,7 @@ namespace CaptureVideo
 				return;
 			}
 		}
-		private static void CaptureVideo(string video, string saveDir)
+		private void CaptureVideo(string video, string saveDir)
 		{
 			using (VideoCapture capture = new VideoCapture(video))
 			{
@@ -80,7 +81,7 @@ namespace CaptureVideo
 				{
 					throw new Exception($"视频 [{video}] 打开失败");
 				}
-
+				double frameCount = Math.Floor(capture.GetCaptureProperty(CapProp.FrameCount));
 				int index = 0;
 				using (Mat mat = new Mat())
 				{
@@ -88,6 +89,8 @@ namespace CaptureVideo
 					while (!mat.IsEmpty)
 					{
 						mat.Bitmap.Save($"{System.IO.Path.Combine(saveDir, index.ToString())}.bmp");
+						string progress = ((index + 1) / frameCount).ToString("P");
+						this.Invoke(st, progress);
 						capture.Read(mat);
 						index++;
 					}
