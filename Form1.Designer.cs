@@ -58,6 +58,7 @@
 			// 
 			this.videoPathTxtBox.Location = new System.Drawing.Point(39, 38);
 			this.videoPathTxtBox.Name = "videoPathTxtBox";
+			this.videoPathTxtBox.ReadOnly = true;
 			this.videoPathTxtBox.Size = new System.Drawing.Size(391, 21);
 			this.videoPathTxtBox.TabIndex = 1;
 			this.videoPathTxtBox.Text = "选择视频";
@@ -66,6 +67,7 @@
 			// 
 			this.saveDirTxtBox.Location = new System.Drawing.Point(39, 109);
 			this.saveDirTxtBox.Name = "saveDirTxtBox";
+			this.saveDirTxtBox.ReadOnly = true;
 			this.saveDirTxtBox.Size = new System.Drawing.Size(391, 21);
 			this.saveDirTxtBox.TabIndex = 2;
 			this.saveDirTxtBox.Text = "选择保存图片的目录";
