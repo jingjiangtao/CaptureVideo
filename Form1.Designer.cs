@@ -120,6 +120,7 @@
             this.saveImgFormat.Name = "saveImgFormat";
             this.saveImgFormat.Size = new System.Drawing.Size(455, 25);
             this.saveImgFormat.TabIndex = 6;
+            this.saveImgFormat.SelectedIndexChanged += new System.EventHandler(this.SaveImgFormat_SelectedIndexChanged);
             // 
             // Form1
             // 
