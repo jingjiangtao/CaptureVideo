@@ -16,21 +16,20 @@ namespace CaptureVideo
     {
         private string videoPath = string.Empty;
         private string saveDir = string.Empty;
-        private int saveImgIndex = 0;
+        private int saveImgIndex = 0; // 下拉框默认值为0
 
-        private delegate void SetText(string progress);
-        private SetText st;
-
-        private void SetTextProgress(string progress)
-        {
-            this.message.Text = progress;
-        }
+        private Action<string> setText; // 显示进度的委托
 
         public Form1()
         {
             InitializeComponent();
-            saveImgFormat.SelectedIndex = saveImgIndex;
-            st = new SetText(SetTextProgress);
+            saveImgFormat.SelectedIndex = saveImgIndex; // 设置下拉框默认值
+
+            // 显示进度的委托绑定
+            setText += progress =>
+            {
+                this.message.Text = progress;
+            };
         }
 
         private void SelectVideoPath(object sender, EventArgs e)
@@ -57,6 +56,7 @@ namespace CaptureVideo
             }
         }
 
+        // “生成”按钮的点击事件
         private async void CaptureVideoFrame_Click(object sender, EventArgs e)
         {
             try
@@ -77,6 +77,8 @@ namespace CaptureVideo
                 return;
             }
         }
+
+        // 读取视频每一帧并保存为图片
         private void CaptureVideo(string video, string saveDir, string imgFormat)
         {
             using (VideoCapture capture = new VideoCapture(video))
@@ -97,7 +99,7 @@ namespace CaptureVideo
                             mat.Bitmap.Save($"{System.IO.Path.Combine(saveDir, index.ToString())}.jpg",
                                 System.Drawing.Imaging.ImageFormat.Jpeg);
                         }
-                        else if(imgFormat == "png")
+                        else if (imgFormat == "png")
                         {
                             mat.Bitmap.Save($"{System.IO.Path.Combine(saveDir, index.ToString())}.png",
                                 System.Drawing.Imaging.ImageFormat.Png);
@@ -113,16 +115,15 @@ namespace CaptureVideo
                                 System.Drawing.Imaging.ImageFormat.Jpeg);
                         }
                         string progress = ((index + 1) / frameCount).ToString("P");
-                        this.Invoke(st, progress);
+                        this.Invoke(setText, progress);
                         capture.Read(mat);
                         index++;
                     }
                 }
-                Console.WriteLine("视频读取完毕");
-
             }
         }
 
+        // 下拉框的值改变时获取改变后的值
         private void SaveImgFormat_SelectedIndexChanged(object sender, EventArgs e)
         {
             ComboBox combo = (ComboBox)sender;
