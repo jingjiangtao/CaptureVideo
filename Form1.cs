@@ -18,7 +18,7 @@ namespace CaptureVideo
         private string saveDir = string.Empty;
         private int saveImgIndex = 0; // 下拉框默认值为0
 
-        private Action<string> setText; // 显示进度的委托
+        private Action<double> setText; // 显示进度的委托
 
         public Form1()
         {
@@ -27,9 +27,19 @@ namespace CaptureVideo
 
             // 显示进度的委托绑定
             setText += progress =>
-            {
-                this.message.Text = progress;
+            {                
+                this.message.Text = progress.ToString("P");
+                this.progressBar1.Value = Convert.ToInt32(progress * 100);
             };
+
+            ProgressControlsVisible(false);
+        }
+
+        private void ProgressControlsVisible(bool visible)
+        {
+            this.message.Visible = visible;
+            this.progressBar1.Visible = visible;
+            this.cancel.Visible = visible;
         }
 
         private void SelectVideoPath(object sender, EventArgs e)
@@ -67,15 +77,19 @@ namespace CaptureVideo
                 }
                 string imgFormat = saveImgFormat.Items[saveImgIndex].ToString();
                 Task task = Task.Run(() => CaptureVideo(videoPath, saveDir, imgFormat));
-
+                ProgressControlsVisible(true);
                 await task;
                 this.message.Text = "完成";
             }
             catch
             {
-                this.message.Text = "失败";
-                return;
+                this.message.Text = "失败";                
             }
+        }
+
+        private void cancel_Click(object sender, EventArgs e)
+        {
+
         }
 
         // 读取视频每一帧并保存为图片
@@ -114,7 +128,7 @@ namespace CaptureVideo
                             mat.Bitmap.Save($"{System.IO.Path.Combine(saveDir, index.ToString())}.jpg",
                                 System.Drawing.Imaging.ImageFormat.Jpeg);
                         }
-                        string progress = ((index + 1) / frameCount).ToString("P");
+                        double progress = (index + 1) / frameCount;
                         this.Invoke(setText, progress);
                         capture.Read(mat);
                         index++;
@@ -129,5 +143,6 @@ namespace CaptureVideo
             ComboBox combo = (ComboBox)sender;
             saveImgIndex = combo.SelectedIndex;
         }
+
     }
 }
