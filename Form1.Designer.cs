@@ -28,7 +28,7 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
-            this.button1 = new System.Windows.Forms.Button();
+            this.selectVideo = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.videoPathTxtBox = new System.Windows.Forms.TextBox();
             this.saveDirTxtBox = new System.Windows.Forms.TextBox();
@@ -36,18 +36,20 @@
             this.CaptureVideoFrame = new System.Windows.Forms.Button();
             this.message = new System.Windows.Forms.Label();
             this.saveImgFormat = new System.Windows.Forms.ComboBox();
+            this.progressBar1 = new System.Windows.Forms.ProgressBar();
+            this.Cancel = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
-            // button1
+            // selectVideo
             // 
-            this.button1.Location = new System.Drawing.Point(539, 54);
-            this.button1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(110, 23);
-            this.button1.TabIndex = 0;
-            this.button1.Text = "选择";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.SelectVideoPath);
+            this.selectVideo.Location = new System.Drawing.Point(539, 54);
+            this.selectVideo.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.selectVideo.Name = "selectVideo";
+            this.selectVideo.Size = new System.Drawing.Size(110, 23);
+            this.selectVideo.TabIndex = 0;
+            this.selectVideo.Text = "选择";
+            this.selectVideo.UseVisualStyleBackColor = true;
+            this.selectVideo.Click += new System.EventHandler(this.SelectVideoPath);
             // 
             // label1
             // 
@@ -101,10 +103,11 @@
             // message
             // 
             this.message.AutoSize = true;
-            this.message.Location = new System.Drawing.Point(308, 244);
+            this.message.Location = new System.Drawing.Point(260, 284);
             this.message.Name = "message";
-            this.message.Size = new System.Drawing.Size(0, 17);
+            this.message.Size = new System.Drawing.Size(32, 17);
             this.message.TabIndex = 5;
+            this.message.Text = "进度";
             // 
             // saveImgFormat
             // 
@@ -122,11 +125,30 @@
             this.saveImgFormat.TabIndex = 6;
             this.saveImgFormat.SelectedIndexChanged += new System.EventHandler(this.SaveImgFormat_SelectedIndexChanged);
             // 
+            // progressBar1
+            // 
+            this.progressBar1.Location = new System.Drawing.Point(45, 251);
+            this.progressBar1.Name = "progressBar1";
+            this.progressBar1.Size = new System.Drawing.Size(455, 23);
+            this.progressBar1.TabIndex = 7;
+            // 
+            // Cancel
+            // 
+            this.Cancel.Location = new System.Drawing.Point(539, 251);
+            this.Cancel.Name = "Cancel";
+            this.Cancel.Size = new System.Drawing.Size(110, 23);
+            this.Cancel.TabIndex = 8;
+            this.Cancel.Text = "取消";
+            this.Cancel.UseVisualStyleBackColor = true;
+            this.Cancel.Click += new System.EventHandler(this.Cancel_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(701, 310);
+            this.Controls.Add(this.Cancel);
+            this.Controls.Add(this.progressBar1);
             this.Controls.Add(this.saveImgFormat);
             this.Controls.Add(this.message);
             this.Controls.Add(this.CaptureVideoFrame);
@@ -134,7 +156,7 @@
             this.Controls.Add(this.saveDirTxtBox);
             this.Controls.Add(this.videoPathTxtBox);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.selectVideo);
             this.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "Form1";
@@ -146,7 +168,7 @@
 
 		#endregion
 
-		private System.Windows.Forms.Button button1;
+		private System.Windows.Forms.Button selectVideo;
 		private System.Windows.Forms.Label label1;
 		private System.Windows.Forms.TextBox videoPathTxtBox;
 		private System.Windows.Forms.TextBox saveDirTxtBox;
@@ -154,6 +176,8 @@
 		private System.Windows.Forms.Button CaptureVideoFrame;
 		private System.Windows.Forms.Label message;
         private System.Windows.Forms.ComboBox saveImgFormat;
+        private System.Windows.Forms.ProgressBar progressBar1;
+        private System.Windows.Forms.Button Cancel;
     }
 }
 
