@@ -7,6 +7,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -17,6 +18,7 @@ namespace CaptureVideo
         private string videoPath = string.Empty;
         private string saveDir = string.Empty;
         private int saveImgIndex = 0; // 下拉框默认值为0
+        private CancellationTokenSource cts;
 
         private Action<double> setText; // 显示进度的委托
 
@@ -27,7 +29,7 @@ namespace CaptureVideo
 
             // 显示进度的委托绑定
             setText += progress =>
-            {                
+            {
                 this.message.Text = progress.ToString("P");
                 this.progressBar1.Value = Convert.ToInt32(progress * 100);
             };
@@ -39,7 +41,7 @@ namespace CaptureVideo
         {
             this.message.Visible = visible;
             this.progressBar1.Visible = visible;
-            this.cancel.Visible = visible;
+            this.Cancel.Visible = visible;
         }
 
         private void SelectVideoPath(object sender, EventArgs e)
@@ -75,25 +77,34 @@ namespace CaptureVideo
                 {
                     return;
                 }
+                cts = new CancellationTokenSource();
                 string imgFormat = saveImgFormat.Items[saveImgIndex].ToString();
-                Task task = Task.Run(() => CaptureVideo(videoPath, saveDir, imgFormat));
+                Task task = Task.Run(() => CaptureVideo(videoPath, saveDir, imgFormat, cts.Token), cts.Token);
                 ProgressControlsVisible(true);
-                await task;
+                await task;                
                 this.message.Text = "完成";
             }
-            catch
+            catch (OperationCanceledException)
             {
-                this.message.Text = "失败";                
+                this.progressBar1.Value = 0;
+                this.message.Text = "已取消";
+            }
+            catch
+            {                
+                this.message.Text = "失败";
             }
         }
 
-        private void cancel_Click(object sender, EventArgs e)
+        private void Cancel_Click(object sender, EventArgs e)
         {
-
+            if (cts != null)
+            {
+                cts.Cancel();
+            }
         }
 
         // 读取视频每一帧并保存为图片
-        private void CaptureVideo(string video, string saveDir, string imgFormat)
+        private void CaptureVideo(string video, string saveDir, string imgFormat, CancellationToken cancelToken)
         {
             using (VideoCapture capture = new VideoCapture(video))
             {
@@ -108,6 +119,7 @@ namespace CaptureVideo
                     capture.Read(mat);
                     while (!mat.IsEmpty)
                     {
+                        cancelToken.ThrowIfCancellationRequested();
                         if (imgFormat == "jpg")
                         {
                             mat.Bitmap.Save($"{System.IO.Path.Combine(saveDir, index.ToString())}.jpg",

@@ -37,7 +37,7 @@
             this.message = new System.Windows.Forms.Label();
             this.saveImgFormat = new System.Windows.Forms.ComboBox();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
-            this.cancel = new System.Windows.Forms.Button();
+            this.Cancel = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // selectVideo
@@ -132,22 +132,22 @@
             this.progressBar1.Size = new System.Drawing.Size(455, 23);
             this.progressBar1.TabIndex = 7;
             // 
-            // cancel
+            // Cancel
             // 
-            this.cancel.Location = new System.Drawing.Point(539, 251);
-            this.cancel.Name = "cancel";
-            this.cancel.Size = new System.Drawing.Size(110, 23);
-            this.cancel.TabIndex = 8;
-            this.cancel.Text = "取消";
-            this.cancel.UseVisualStyleBackColor = true;
-            this.cancel.Click += new System.EventHandler(this.cancel_Click);
+            this.Cancel.Location = new System.Drawing.Point(539, 251);
+            this.Cancel.Name = "Cancel";
+            this.Cancel.Size = new System.Drawing.Size(110, 23);
+            this.Cancel.TabIndex = 8;
+            this.Cancel.Text = "取消";
+            this.Cancel.UseVisualStyleBackColor = true;
+            this.Cancel.Click += new System.EventHandler(this.Cancel_Click);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(701, 310);
-            this.Controls.Add(this.cancel);
+            this.Controls.Add(this.Cancel);
             this.Controls.Add(this.progressBar1);
             this.Controls.Add(this.saveImgFormat);
             this.Controls.Add(this.message);
@@ -177,7 +177,7 @@
 		private System.Windows.Forms.Label message;
         private System.Windows.Forms.ComboBox saveImgFormat;
         private System.Windows.Forms.ProgressBar progressBar1;
-        private System.Windows.Forms.Button cancel;
+        private System.Windows.Forms.Button Cancel;
     }
 }
 
